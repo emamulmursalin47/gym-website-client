@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/button';
@@ -25,169 +25,43 @@ import {
   Zap,
   Heart,
   Dumbbell,
-  Activity
+  Activity,
+  Loader2,
+  AlertCircle
 } from 'lucide-react';
-import { Header } from '@/src/components/layout/header';
-import { Footer } from '@/src/components/layout/footer';
 import Image from 'next/image';
-
-// Mock data
-const classes = [
-  {
-    id: 1,
-    name: 'HIIT Cardio Blast',
-    description: 'High-intensity interval training to boost your cardiovascular fitness and burn calories fast.',
-    trainer: {
-      name: 'Marcus Williams',
-      avatar: 'https://images.pexels.com/photos/3931192/pexels-photo-3931192.jpeg?auto=compress&cs=tinysrgb&w=150',
-      rating: 4.8
-    },
-    category: 'Cardio',
-    difficulty: 'High',
-    duration: 45,
-    maxCapacity: 15,
-    currentEnrollment: 12,
-    schedule: [
-      { day: 'Monday', time: '18:00' },
-      { day: 'Wednesday', time: '18:00' },
-      { day: 'Friday', time: '18:00' }
-    ],
-    location: 'Studio A',
-    price: 25,
-    image: 'https://images.pexels.com/photos/416778/pexels-photo-416778.jpeg?auto=compress&cs=tinysrgb&w=400',
-    features: ['Calorie Burn', 'Cardio Boost', 'Full Body']
-  },
-  {
-    id: 2,
-    name: 'Yoga Flow',
-    description: 'Gentle flowing yoga sequences to improve flexibility, balance, and mental clarity.',
-    trainer: {
-      name: 'Emily Chen',
-      avatar: 'https://images.pexels.com/photos/3766211/pexels-photo-3766211.jpeg?auto=compress&cs=tinysrgb&w=150',
-      rating: 5.0
-    },
-    category: 'Yoga',
-    difficulty: 'Beginner',
-    duration: 60,
-    maxCapacity: 20,
-    currentEnrollment: 18,
-    schedule: [
-      { day: 'Tuesday', time: '07:30' },
-      { day: 'Thursday', time: '07:30' },
-      { day: 'Saturday', time: '09:00' }
-    ],
-    location: 'Studio B',
-    price: 20,
-    image: 'https://images.pexels.com/photos/3822622/pexels-photo-3822622.jpeg?auto=compress&cs=tinysrgb&w=400',
-    features: ['Flexibility', 'Mindfulness', 'Stress Relief']
-  },
-  {
-    id: 3,
-    name: 'Strength Training',
-    description: 'Build muscle and increase strength with progressive weight training techniques.',
-    trainer: {
-      name: 'Sarah Johnson',
-      avatar: 'https://images.pexels.com/photos/3768997/pexels-photo-3768997.jpeg?auto=compress&cs=tinysrgb&w=150',
-      rating: 4.9
-    },
-    category: 'Strength',
-    difficulty: 'Intermediate',
-    duration: 60,
-    maxCapacity: 10,
-    currentEnrollment: 8,
-    schedule: [
-      { day: 'Monday', time: '19:00' },
-      { day: 'Wednesday', time: '19:00' },
-      { day: 'Friday', time: '19:00' }
-    ],
-    location: 'Weight Room',
-    price: 30,
-    image: 'https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=400',
-    features: ['Muscle Building', 'Strength', 'Progressive Training']
-  },
-  {
-    id: 4,
-    name: 'Pilates Core',
-    description: 'Strengthen your core and improve posture with precise Pilates movements.',
-    trainer: {
-      name: 'Emily Chen',
-      avatar: 'https://images.pexels.com/photos/3766211/pexels-photo-3766211.jpeg?auto=compress&cs=tinysrgb&w=150',
-      rating: 5.0
-    },
-    category: 'Pilates',
-    difficulty: 'Intermediate',
-    duration: 50,
-    maxCapacity: 12,
-    currentEnrollment: 12,
-    schedule: [
-      { day: 'Tuesday', time: '12:00' },
-      { day: 'Thursday', time: '12:00' },
-      { day: 'Saturday', time: '10:30' }
-    ],
-    location: 'Studio C',
-    price: 25,
-    image: 'https://images.pexels.com/photos/3822622/pexels-photo-3822622.jpeg?auto=compress&cs=tinysrgb&w=400',
-    features: ['Core Strength', 'Posture', 'Flexibility']
-  },
-  {
-    id: 5,
-    name: 'Spin Class',
-    description: 'High-energy cycling workout with motivating music and challenging intervals.',
-    trainer: {
-      name: 'Marcus Williams',
-      avatar: 'https://images.pexels.com/photos/3931192/pexels-photo-3931192.jpeg?auto=compress&cs=tinysrgb&w=150',
-      rating: 4.8
-    },
-    category: 'Cardio',
-    difficulty: 'High',
-    duration: 45,
-    maxCapacity: 20,
-    currentEnrollment: 16,
-    schedule: [
-      { day: 'Monday', time: '06:30' },
-      { day: 'Wednesday', time: '06:30' },
-      { day: 'Friday', time: '06:30' }
-    ],
-    location: 'Spin Studio',
-    price: 22,
-    image: 'https://images.pexels.com/photos/416778/pexels-photo-416778.jpeg?auto=compress&cs=tinysrgb&w=400',
-    features: ['Cardio', 'Endurance', 'Music Driven']
-  },
-  {
-    id: 6,
-    name: 'Functional Training',
-    description: 'Real-world movement patterns to improve daily life activities and athletic performance.',
-    trainer: {
-      name: 'David Rodriguez',
-      avatar: 'https://images.pexels.com/photos/3764013/pexels-photo-3764013.jpeg?auto=compress&cs=tinysrgb&w=150',
-      rating: 4.9
-    },
-    category: 'Functional',
-    difficulty: 'Intermediate',
-    duration: 55,
-    maxCapacity: 12,
-    currentEnrollment: 9,
-    schedule: [
-      { day: 'Tuesday', time: '17:30' },
-      { day: 'Thursday', time: '17:30' },
-      { day: 'Saturday', time: '11:00' }
-    ],
-    location: 'Functional Area',
-    price: 28,
-    image: 'https://images.pexels.com/photos/1552242/pexels-photo-1552242.jpeg?auto=compress&cs=tinysrgb&w=400',
-    features: ['Functional Movement', 'Athletic Performance', 'Mobility']
-  }
-];
+import { useAppDispatch, useAppSelector } from '@/src/redux/hooks/hooks';
+import { useGetClassesQuery, useEnrollInClassMutation } from '@/src/redux/api/classApi';
+import { 
+  setSearchTerm, 
+  setCategoryFilter, 
+  setDifficultyFilter 
+} from '@/src/redux/slices/classSlice';
+import { toast } from 'sonner'; // assuming you're using sonner for toasts
 
 const categories = ['All', 'Cardio', 'Strength', 'Yoga', 'Pilates', 'Functional'];
 const difficulties = ['All', 'Beginner', 'Intermediate', 'High'];
 
 export default function ClassesPage() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('All');
-  const [difficultyFilter, setDifficultyFilter] = useState('All');
+  const dispatch = useAppDispatch();
+  const { filters } = useAppSelector((state) => state.classes);
+  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  
+  // RTK Query hooks
+  const { 
+    data: classesResponse, 
+    error, 
+    isLoading, 
+    refetch 
+  } = useGetClassesQuery(filters);
+  
+  const [enrollInClass, { isLoading: isEnrolling }] = useEnrollInClassMutation();
+
+  const classes = classesResponse?.data || [];
 
   const getDifficultyColor = (difficulty: string) => {
+    if (!difficulty) return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+    
     switch (difficulty.toLowerCase()) {
       case 'beginner':
         return 'bg-green-500/20 text-green-400 border-green-500/30';
@@ -202,6 +76,8 @@ export default function ClassesPage() {
   };
 
   const getCategoryIcon = (category: string) => {
+    if (!category) return Activity;
+    
     switch (category.toLowerCase()) {
       case 'cardio':
         return Heart;
@@ -221,19 +97,75 @@ export default function ClassesPage() {
     return (current / max) * 100;
   };
 
-  const filteredClasses = classes.filter(classItem => {
-    const matchesSearch = classItem.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         classItem.trainer.name.toLowerCase().includes(searchTerm.toLowerCase());
+  const handleEnrollment = async (classId: string) => {
+    if (!isAuthenticated) {
+      toast.error('Please login to enroll in classes');
+      return;
+    }
+
+    try {
+      const result = await enrollInClass(classId).unwrap();
+      toast.success('Successfully enrolled in class!');
+    } catch (error: any) {
+      toast.error(error?.data?.message || 'Failed to enroll in class');
+    }
+  };
+
+  // Filter classes based on current filters
+  const filteredClasses = classes.filter((classItem: any) => {
+    const searchTerm = filters.searchTerm || '';
+    const categoryFilter = filters.categoryFilter || 'All';
+    const difficultyFilter = filters.difficultyFilter || 'All';
+    
+    const matchesSearch = (classItem.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (classItem.trainer?.name || '').toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = categoryFilter === 'All' || classItem.category === categoryFilter;
     const matchesDifficulty = difficultyFilter === 'All' || classItem.difficulty === difficultyFilter;
     
     return matchesSearch && matchesCategory && matchesDifficulty;
   });
 
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen">
+        <main className="pt-20 pb-16">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-center min-h-[400px]">
+              <div className="text-center">
+                <Loader2 className="h-12 w-12 animate-spin text-blue-500 mx-auto mb-4" />
+                <p className="text-slate-400 text-lg">Loading classes...</p>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen">
+        <main className="pt-20 pb-16">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-center min-h-[400px]">
+              <div className="text-center">
+                <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+                <p className="text-slate-400 text-lg mb-4">Failed to load classes</p>
+                <Button onClick={() => refetch()} className="btn-primary">
+                  Try Again
+                </Button>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen">
-      <Header />
-      
       <main className="pt-20 pb-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero Section */}
@@ -267,11 +199,14 @@ export default function ClassesPage() {
                     <Input
                       placeholder="Search classes or trainers..."
                       className="pl-10 bg-white/5 border-white/20"
-                      value={searchTerm}
-                      onChange={(e:any) => setSearchTerm(e.target.value)}
+                      value={filters.searchTerm}
+                      onChange={(e) => dispatch(setSearchTerm(e.target.value))}
                     />
                   </div>
-                  <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                  <Select 
+                    value={filters.categoryFilter} 
+                    onValueChange={(value) => dispatch(setCategoryFilter(value))}
+                  >
                     <SelectTrigger className="w-full lg:w-40 bg-white/5 border-white/20">
                       <SelectValue placeholder="Category" />
                     </SelectTrigger>
@@ -281,7 +216,10 @@ export default function ClassesPage() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <Select value={difficultyFilter} onValueChange={setDifficultyFilter}>
+                  <Select 
+                    value={filters.difficultyFilter} 
+                    onValueChange={(value) => dispatch(setDifficultyFilter(value))}
+                  >
                     <SelectTrigger className="w-full lg:w-40 bg-white/5 border-white/20">
                       <SelectValue placeholder="Difficulty" />
                     </SelectTrigger>
@@ -298,7 +236,7 @@ export default function ClassesPage() {
 
           {/* Classes Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredClasses.map((classItem, index) => {
+            {filteredClasses.map((classItem: any, index: number) => {
               const CategoryIcon = getCategoryIcon(classItem.category);
               return (
                 <motion.div
@@ -312,19 +250,18 @@ export default function ClassesPage() {
                     {/* Image */}
                     <div className="relative h-48 overflow-hidden">
                       <Image
-                        src={classItem.image}
+                        src={classItem.image || 'https://images.pexels.com/photos/416778/pexels-photo-416778.jpeg?auto=compress&cs=tinysrgb&w=400'}
                         alt={classItem.name}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         width={500}
                         height={500}
-
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                       
                       {/* Price Badge */}
                       <div className="absolute top-4 right-4">
                         <Badge className="bg-black/60 text-white border-none">
-                          ${classItem.price}
+                          ${classItem.price || 25}
                         </Badge>
                       </div>
 
@@ -368,14 +305,16 @@ export default function ClassesPage() {
                       {/* Trainer */}
                       <div className="flex items-center space-x-3 mb-4">
                         <Avatar className="h-8 w-8">
-                          <AvatarImage src={classItem.trainer.avatar} alt={classItem.trainer.name} />
-                          <AvatarFallback>{classItem.trainer.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                          <AvatarImage src={classItem.trainer?.avatar} alt={classItem.trainer?.name} />
+                          <AvatarFallback>
+                            {classItem.trainer?.name?.split(' ').map((n: string) => n[0]).join('') || 'T'}
+                          </AvatarFallback>
                         </Avatar>
                         <div>
-                          <div className="text-sm font-medium text-white">{classItem.trainer.name}</div>
+                          <div className="text-sm font-medium text-white">{classItem.trainer?.name || 'Trainer'}</div>
                           <div className="flex items-center space-x-1">
                             <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                            <span className="text-xs text-yellow-400">{classItem.trainer.rating}</span>
+                            <span className="text-xs text-yellow-400">{classItem.trainer?.rating || 5.0}</span>
                           </div>
                         </div>
                       </div>
@@ -385,28 +324,28 @@ export default function ClassesPage() {
                         <div className="flex items-center space-x-4 text-sm text-slate-400">
                           <div className="flex items-center space-x-1">
                             <Clock className="h-4 w-4" />
-                            <span>{classItem.duration} min</span>
+                            <span>{classItem.duration || 45} min</span>
                           </div>
                           <div className="flex items-center space-x-1">
                             <MapPin className="h-4 w-4" />
-                            <span>{classItem.location}</span>
+                            <span>{classItem.location || 'Studio A'}</span>
                           </div>
                         </div>
 
                         <div className="flex items-center space-x-2 text-sm text-slate-400">
                           <Users className="h-4 w-4" />
-                          <span>{classItem.currentEnrollment}/{classItem.maxCapacity} enrolled</span>
+                          <span>{classItem.currentEnrollment || 0}/{classItem.maxCapacity || 15} enrolled</span>
                           <div className="flex-1 bg-slate-700 rounded-full h-2 ml-2">
                             <div
                               className={`h-2 rounded-full ${
-                                getCapacityPercentage(classItem.currentEnrollment, classItem.maxCapacity) >= 100
+                                getCapacityPercentage(classItem.currentEnrollment || 0, classItem.maxCapacity || 15) >= 100
                                   ? 'bg-red-500'
-                                  : getCapacityPercentage(classItem.currentEnrollment, classItem.maxCapacity) >= 80
+                                  : getCapacityPercentage(classItem.currentEnrollment || 0, classItem.maxCapacity || 15) >= 80
                                   ? 'bg-orange-500'
                                   : 'bg-green-500'
                               }`}
                               style={{
-                                width: `${Math.min(getCapacityPercentage(classItem.currentEnrollment, classItem.maxCapacity), 100)}%`
+                                width: `${Math.min(getCapacityPercentage(classItem.currentEnrollment || 0, classItem.maxCapacity || 15), 100)}%`
                               }}
                             />
                           </div>
@@ -414,26 +353,30 @@ export default function ClassesPage() {
                       </div>
 
                       {/* Features */}
-                      <div className="flex flex-wrap gap-1 mb-4">
-                        {classItem.features.map((feature) => (
-                          <Badge key={feature} variant="secondary" className="text-xs bg-slate-800 text-slate-300">
-                            {feature}
-                          </Badge>
-                        ))}
-                      </div>
-
-                      {/* Schedule */}
-                      <div className="mb-6">
-                        <h4 className="text-sm font-medium text-white mb-2">Schedule</h4>
-                        <div className="space-y-1">
-                          {classItem.schedule.map((session, idx) => (
-                            <div key={idx} className="flex items-center justify-between text-sm">
-                              <span className="text-slate-400">{session.day}</span>
-                              <span className="text-white">{session.time}</span>
-                            </div>
+                      {classItem.features && (
+                        <div className="flex flex-wrap gap-1 mb-4">
+                          {classItem.features.map((feature: string) => (
+                            <Badge key={feature} variant="secondary" className="text-xs bg-slate-800 text-slate-300">
+                              {feature}
+                            </Badge>
                           ))}
                         </div>
-                      </div>
+                      )}
+
+                      {/* Schedule */}
+                      {classItem.schedule && (
+                        <div className="mb-6">
+                          <h4 className="text-sm font-medium text-white mb-2">Schedule</h4>
+                          <div className="space-y-1">
+                            {classItem.schedule.map((session: any, idx: number) => (
+                              <div key={idx} className="flex items-center justify-between text-sm">
+                                <span className="text-slate-400">{session.day}</span>
+                                <span className="text-white">{session.time}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
 
                       {/* Action Button */}
                       <div className="mt-auto">
@@ -443,9 +386,15 @@ export default function ClassesPage() {
                               ? 'btn-secondary opacity-50 cursor-not-allowed' 
                               : 'btn-primary'
                           }`}
-                          disabled={classItem.currentEnrollment >= classItem.maxCapacity}
+                          disabled={classItem.currentEnrollment >= classItem.maxCapacity || isEnrolling}
+                          onClick={() => handleEnrollment(classItem.id)}
                         >
-                          {classItem.currentEnrollment >= classItem.maxCapacity ? (
+                          {isEnrolling ? (
+                            <>
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              Enrolling...
+                            </>
+                          ) : classItem.currentEnrollment >= classItem.maxCapacity ? (
                             'Class Full'
                           ) : (
                             <>
@@ -463,7 +412,7 @@ export default function ClassesPage() {
           </div>
 
           {/* No Results */}
-          {filteredClasses.length === 0 && (
+          {filteredClasses.length === 0 && !isLoading && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -478,8 +427,6 @@ export default function ClassesPage() {
           )}
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }

@@ -1,8 +1,12 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { Providers } from '@/src/components/providers';
+
 import { Toaster } from '@/src/components/ui/sonner';
+import { Provider } from 'react-redux';
+import ReduxProvider from '../Provider/provider';
+
+
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -51,10 +55,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
-        <Providers>
-          {children}
+      <ReduxProvider>
+  {children}
           <Toaster />
-        </Providers>
+      </ReduxProvider>
+        
+      
       </body>
     </html>
   );
