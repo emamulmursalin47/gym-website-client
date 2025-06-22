@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card';
+import { Card, CardContent } from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/button';
 import { Input } from '@/src/components/ui/input';
 import { Badge } from '@/src/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar';
+
 import {
   Select,
   SelectContent,
@@ -27,8 +27,7 @@ import {
   Linkedin,
   CheckCircle
 } from 'lucide-react';
-import { Header } from '@/src/components/layout/header';
-import { Footer } from '@/src/components/layout/footer';
+
 import Image from 'next/image';
 
 // Mock data
@@ -224,7 +223,7 @@ export default function TrainersPage() {
 
   return (
     <div className="min-h-screen">
-      <Header />
+ 
       
       <main className="pt-20 pb-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -452,7 +451,7 @@ export default function TrainersPage() {
         </div>
       </main>
 
-      <Footer />
+
     </div>
   );
 }

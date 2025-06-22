@@ -23,7 +23,7 @@ const LoadingPage = () => {
 
         {/* Text that matches TajaFol branding */}
         <div className="text-center">
-          <h2 className="text-2xl font-medium text-foreground mb-2">TajaFol</h2>
+          <h2 className="text-2xl font-medium text-foreground mb-2">PowerHouse</h2>
           <p className="text-sm text-muted-foreground">
             Preparing your fresh content experience...
           </p>
