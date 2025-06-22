@@ -476,6 +476,7 @@ export default function RegisterPage() {
                           <div key={goal} className="flex items-center space-x-2">
                             <Checkbox
                               id={goal}
+                              //@ts-ignore
                               checked={formData.fitnessGoals.includes(goal)}
                               onCheckedChange={(checked) => {
                                 if (checked) {
